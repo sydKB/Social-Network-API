@@ -69,12 +69,43 @@ async function deleteUser(req, res) {
 }
 
 function addFriend(req, res) {
-  User.findOne({ _id: req.params.userId })
-
+    User.findOne({ _id: req.params.friendId })
+      .select('_v')
+      .then( (user) => {
+        return User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: {friends: user._id} },
+        { new: true }
+        );
+    })
+    .then((user)=> 
+      user 
+      ? res.json(user)
+      : res.status(404).json({ message: 'No user with this id!' })
+    )
+    .catch ((err) =>
+      res.status(500).json(err)
+    );
 }
 
 function deleteFriend(req, res) {
-  User.findOne({ _id: req.params.userId })
+  User.findOne({ _id: req.params.friendId })
+      .select('_v')
+      .then( (user) => {
+        return User.findOneAndUpdate(
+        //{ _id: req.params.userId },
+        { $pull: {friends: user._id} },
+        { new: true }
+        );
+    })
+    .then((user)=> 
+      user 
+      ? res.json(user)
+      : res.status(404).json({ message: 'No user with this id!' })
+    )
+    .catch ((err) =>
+      res.status(500).json(err)
+    );
 
 }
 
