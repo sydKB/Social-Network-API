@@ -14,6 +14,7 @@ const thoughtSchema = new Schema(
       type: Date,
       default: Date.now,
       // use getter method to format timestamp
+
     },
     username: {
       type: String,
@@ -24,6 +25,7 @@ const thoughtSchema = new Schema(
   {
     toJSON: {
       virtuals: true,
+      getters: true,
     },
     id: false,
   }
@@ -33,9 +35,8 @@ const thoughtSchema = new Schema(
 thoughtSchema
   .virtual('reactionCount')
   .get(function () {return this.reactions.length;});
-  //.set('toObject', { getters: true });
 
-// Initialize our Video model
+// Initialize our Thought model
 const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;

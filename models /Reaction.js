@@ -4,7 +4,7 @@ const reactionSchema = new Schema(
   {
     reactionId: {
       type: Schema.Types.ObjectId,
-      default: new Types.ObjectId(),
+      default: () => new Types.ObjectId(),
     },
     reactionBody: {
       type: String,
@@ -21,14 +21,15 @@ const reactionSchema = new Schema(
       // use getter method to format timestamp
     },
   },
-  // {
-  //   toJSON: {
-  //     getters: true,
-  //   },
-  //   id: false,
-  // }
+  {
+    toJSON: {
+      getters: true,
+    },
+    id: false,
+  }
 );
 
 // reactionSchema.set('toObject', { getters: true });
+
 
 module.exports = reactionSchema;
