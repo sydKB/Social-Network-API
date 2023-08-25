@@ -1,5 +1,15 @@
 # 18 NoSQL: Social Network API
 
+## Completed Application
+
+This is a command-line application that manages a company's employee database, using Node.js, Inquirer, and MySQL. It has functions that display and add departments, employees and roles. You can also update employee roles. 
+
+- - - -
+[![A video thumbnail shows a walkthrough video of the applications and its functions.](./Assets/tutorial-thumbnail.gif)](https://watch.screencastify.com/v/tekDmbNTadsxzHviN0tB)
+
+<details>
+  <summary>Click to see grading expectations</summary>
+
 ## Your Task
 
 MongoDB is a popular choice for many social networks due to its speed with large amounts of data and flexibility with unstructured data. Over the last part of this course, you’ll use several of the technologies that social networking platforms use in their full-stack applications. Because the foundation of these applications is data, it’s important that you understand how to build and structure the API first.
@@ -275,6 +285,8 @@ You are required to submit BOTH of the following for review:
 * A walkthrough video demonstrating the functionality of the application and all of the acceptance criteria being met.
 
 * The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
+
+</details>
 
 ---
 © 2022 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
