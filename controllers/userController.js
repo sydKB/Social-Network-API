@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models/User');
 
 
 async function getUsers(req, res) {
@@ -10,7 +10,6 @@ async function getUsers(req, res) {
     res.status(500).json(err);
   }
 };
-
 
 async function getSingleUser(req, res) {
   try {
@@ -40,7 +39,7 @@ async function updateUser(req, res) {
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $set: req.body },
+      { $set: {username: req.body.username }},
       { new: true }
     );
     
@@ -69,44 +68,43 @@ async function deleteUser(req, res) {
 }
 
 function addFriend(req, res) {
-    User.findOne({ _id: req.params.friendId })
-      .select('_v')
-      .then( (user) => {
-        return User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $addToSet: {friends: user._id} },
-        { new: true }
-        );
-    })
-    .then((user)=> 
-      user 
-      ? res.json(user)
-      : res.status(404).json({ message: 'No user with this id!' })
-    )
-    .catch ((err) =>
-      res.status(500).json(err)
-    );
+  try {
+    const user = User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: {friends: req.params.friendId } },
+      { runValidators: true, new: true }
+      );
+  
+      if (user) {
+        res.json(user);
+        res.json({ message: 'User successfully deleted!' });
+      } else {
+        res.status(404).json({ message: 'No user with this id!' });
+      }
+  }
+  catch (err) {
+    res.status(500).json(err)
+  }
 }
 
 function deleteFriend(req, res) {
-  User.findOne({ _id: req.params.friendId })
-      .select('_v')
-      .then( (user) => {
-        return User.findOneAndUpdate(
-        //{ _id: req.params.userId },
-        { $pull: {friends: user._id} },
-        { new: true }
-        );
-    })
-    .then((user)=> 
-      user 
-      ? res.json(user)
-      : res.status(404).json({ message: 'No user with this id!' })
-    )
-    .catch ((err) =>
-      res.status(500).json(err)
-    );
-
+  try {
+    const user = User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: {friends: req.params.friendId } },
+      { runValidators: true, new: true }
+      );
+  
+      if (user) {
+        res.json(user);
+        res.json({ message: 'User successfully deleted!' });
+      } else {
+        res.status(404).json({ message: 'No user with this id!' });
+      }
+  }
+  catch (err) {
+    res.status(500).json(err)
+  }
 }
 
 module.exports = {
