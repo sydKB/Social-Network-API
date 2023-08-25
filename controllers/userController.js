@@ -4,6 +4,8 @@ const { User } = require('../models/User');
 async function getUsers(req, res) {
   try {
     const users = await User.find()
+      .populate("thoughts")
+      .populate("friends");
     res.json(users);
   }
   catch (err) {
@@ -13,7 +15,10 @@ async function getUsers(req, res) {
 
 async function getSingleUser(req, res) {
   try {
-    const user = await User.findOne({ _id: req.params.userId });
+    const user = await User.findOne(
+      { _id: req.params.userId })
+      .populate("thoughts")
+      .populate("friends");
     if (user) {
       res.json(user);
     } else {

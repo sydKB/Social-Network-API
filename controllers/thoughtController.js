@@ -28,19 +28,19 @@ async function getSingleThought(req, res) {
 // create a new thought
 async function createThought(req, res) {
   try {
-    const thought = await Thought.create(req.body);
-    //res.json(thought);
-    
-    const user = await User.findOneAndUpdate(
-      { username: req.body.username },
-      { $push: { thoughts: thought._id } },
-      { new: true }
-    );
-    
-    if (user) {
-      res.status(200).json('Created the thought', thought);      
-    } else {
-      res.status(404).json('Thought created, but found no user with that ID');
+    const newThought = await Thought.create(req.body);
+
+    if (newThought) {
+      const user = await User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $push: { thoughts: newThought._id } },
+        { new: true }
+      );
+      if (user) {
+        res.status(200).json('Created the thought', newThought);      
+      } else {
+        res.status(404).json('Thought created, but found no user with that ID');
+      }
     }
   } catch (err) {
     console.log(err);
@@ -53,7 +53,7 @@ async function updateThought(req, res) {
     const thought = await Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $set: req.body },
-      { new: true }
+      { runValidators: true, new: true }
     );
     
     if (thought) {
@@ -69,21 +69,19 @@ async function updateThought(req, res) {
 
 async function deleteThought(req, res) {
   try {
-    const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
+    const newThought = await Thought.findOneAndDelete(req.body);
 
-    if (thought) {
+    if (newThought) {
       const user = await User.findOneAndUpdate(
-        { thoughts: req.params.thoughtId },
-        { $pull: { thoughts: req.params.thoughtId } },
+        { _id: req.body.userId },
+        { $pull: { thoughts: newThought._id } },
         { new: true }  
       );
       if (user) {
-        res.json('Thought successfully deleted!', thought);
+        res.json('Thought successfully deleted!', newThought);
       } else {
         res.status(404).json('No user with this id!');
-      }
-      res.json(thought);
-      
+      }  
     } else {
       res.status(404).json('No thought with this id!' );
     }
@@ -99,7 +97,7 @@ async function addThoughtReaction(req, res) {
   try { 
     const reaction = await Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $addToSet: { reactions: req.body } },//req.params/reactionId
+      { $addToSet: { reactions: req.body } },
       { new: true }
     )
     if(reaction) {
