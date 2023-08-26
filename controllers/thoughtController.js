@@ -1,5 +1,6 @@
 const { Thought, User } = require('../models ');
 
+// display all thoughts
 async function getThoughts(req, res) {
   try {
     const allThoughts = await Thought.find();
@@ -9,6 +10,7 @@ async function getThoughts(req, res) {
   }
 }
 
+// display just one thought
 async function getSingleThought(req, res) {
   try {
     const thought = await Thought.findOne({ _id: req.params.thoughtId });
@@ -46,6 +48,7 @@ async function createThought(req, res) {
   }
 }
 
+// update existing thought
 async function updateThought(req, res) {
   try {
     const thought = await Thought.findOneAndUpdate(
@@ -64,6 +67,7 @@ async function updateThought(req, res) {
   }
 }
 
+// delete existing thought
 async function deleteThought(req, res) {
   try {
     const thought = await Thought.findOneAndDelete( {_id: req.params.thoughtId} );
@@ -92,7 +96,8 @@ async function addThoughtReaction(req, res) {
       { _id: req.params.thoughtId },
       { $addToSet: { reactions: req.body } },
       { new: true }
-    )
+    );
+
     if(reaction) {
       res.status(200).json(reaction)
       res.json(reaction)
@@ -112,9 +117,9 @@ async function removeThoughtReaction(req, res) {
       { _id: req.params.thoughtId },
       { $pull: { reactions: { reactionId: req.params.reactionId } } },
       { new: true }
-    )
+    );
+
     if (reaction) {
-      res.json(reaction);
       res.status(200).json('Reaction removed!')
     } else { 
       res.status(404).json('Failed to remove reaction!' )

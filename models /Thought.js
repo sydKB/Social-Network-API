@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction');
 const formatDate = require('../utils/formatDate.js');
 
-// Schema to create Post model
+// Schema to create Thought model
 const thoughtSchema = new Schema(
   {
     thoughtText: {
@@ -20,7 +20,7 @@ const thoughtSchema = new Schema(
       type: String,
       required: true,
     },
-    reactions: [reactionSchema], //Array of nested documents created w reactionSchema
+    reactions: [reactionSchema],  
   },
   {
     toJSON: {
@@ -30,13 +30,12 @@ const thoughtSchema = new Schema(
     id: false,
   }
 );
-
-// Create a virtual property `responses` that gets the amount of response per video
+ 
 thoughtSchema
   .virtual('reactionCount')
   .get(function () {return this.reactions.length;});
 
-// Initialize our Thought model
+// Initialize Thought model
 const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;

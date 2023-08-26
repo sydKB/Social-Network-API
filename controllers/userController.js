@@ -1,5 +1,6 @@
 const { User } = require('../models ');
 
+// display all users
 async function getUsers(req, res) {
   try {
     const users = await User.find()
@@ -12,6 +13,7 @@ async function getUsers(req, res) {
   }
 };
 
+// display just one user
 async function getSingleUser(req, res) {
   try {
     const user = await User.findOne(
@@ -58,6 +60,7 @@ async function updateUser(req, res) {
   }
 }
 
+// delete a user given its id
 async function deleteUser(req, res) {
   try {
     const user = await User.findOneAndRemove({ _id: req.params.userId });
@@ -71,6 +74,7 @@ async function deleteUser(req, res) {
   }
 }
 
+// add a friend by connecting existing users to each other
 async function addFriend(req, res) {
   try {
     const user = await User.findOneAndUpdate(
@@ -90,6 +94,7 @@ async function addFriend(req, res) {
   }
 }
 
+// delete a users's friend
 async function deleteFriend(req, res) {
   try {
     const user = await User.findOneAndUpdate(
