@@ -5,7 +5,6 @@ async function getThoughts(req, res) {
     const allThoughts = await Thought.find();
     res.json(allThoughts);
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }
@@ -20,7 +19,6 @@ async function getSingleThought(req, res) {
     }
   }
   catch(err) {  
-    console.log(err);
     res.status(500).json(err);
   }
 }
@@ -36,6 +34,7 @@ async function createThought(req, res) {
         { $push: { thoughts: newThought._id } },
         { new: true }
       );
+
       if (user) {
         res.status(200).json('Created the thought', newThought);      
       } else {
@@ -43,7 +42,6 @@ async function createThought(req, res) {
       }
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }
@@ -55,39 +53,34 @@ async function updateThought(req, res) {
       { $set: req.body },
       { runValidators: true, new: true }
     );
-    
+
     if (thought) {
       res.json(thought);
     } else {
       res.status(404).json('No thought with this id!');
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }
 
 async function deleteThought(req, res) {
   try {
-    const newThought = await Thought.findOneAndDelete(req.body);
+    const thought = await Thought.findOneAndDelete( {_id: req.params.thoughtId} );
 
-    if (newThought) {
+    if (thought) {
       const user = await User.findOneAndUpdate(
         { _id: req.body.userId },
-        { $pull: { thoughts: newThought._id } },
+        { $pull: { thoughts: thought._id } },
         { new: true }  
       );
-      if (user) {
-        res.json('Thought successfully deleted!', newThought);
-      } else {
-        res.status(404).json('No user with this id!');
-      }  
+      res.json('Thought successfully deleted!'); 
+      
     } else {
       res.status(404).json('No thought with this id!' );
     }
 
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }
@@ -101,14 +94,13 @@ async function addThoughtReaction(req, res) {
       { new: true }
     )
     if(reaction) {
-      res.status(200).json('Reaction added!', reaction)
+      res.status(200).json(reaction)
       res.json(reaction)
     } else {
       res.status(404).json('Failed to add reaction!')
     }
   }
   catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }
@@ -128,7 +120,6 @@ async function removeThoughtReaction(req, res) {
       res.status(404).json('Failed to remove reaction!' )
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }

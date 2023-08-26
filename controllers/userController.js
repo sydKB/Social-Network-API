@@ -71,29 +71,28 @@ async function deleteUser(req, res) {
   }
 }
 
-function addFriend(req, res) {
+async function addFriend(req, res) {
   try {
-    const user = User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $addToSet: {friends: req.params.friendId } },
+      { $addToSet: { friends: req.params.friendId } },
       { runValidators: true, new: true }
-      );
-  
-      if (user) {
-        res.json(user);
-        res.json({ message: 'User successfully deleted!' });
-      } else {
-        res.status(404).json({ message: 'No user with this id!' });
-      }
+    );
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'No user with this id!' });
+    }
+    console.log("yas");
   }
   catch (err) {
     res.status(500).json(err)
   }
 }
 
-function deleteFriend(req, res) {
+async function deleteFriend(req, res) {
   try {
-    const user = User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { _id: req.params.userId },
       { $pull: {friends: req.params.friendId } },
       { runValidators: true, new: true }
