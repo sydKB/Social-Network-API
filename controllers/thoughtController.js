@@ -36,7 +36,7 @@ async function createThought(req, res) {
       );
 
       if (user) {
-        res.status(200).json('Created the thought', newThought);      
+        res.status(200).json('Created the thought');      
       } else {
         res.status(404).json('Thought created, but found no user with that ID');
       }
